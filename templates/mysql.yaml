@@ -20,8 +20,10 @@ spec:
       initContainers:
       - image: alpine
         name: bookstack-mysql-init
-        command: ["rm"]
-        args: ["-rf", "/mnt/lost+found/"]
+        command: 
+          - sh
+          - "-c"
+          - "rm -rf /mnt/lost+found"
         resources:
           requests:
             cpu: 250m
