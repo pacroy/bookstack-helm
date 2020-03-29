@@ -20,5 +20,5 @@ kubectl create namespace testwiki
 Clone this repo and install with Helm
 
 ```
-helm install testwiki --set appHost=www.testwiki.com ./bookstack
+helm install testwiki --namespace=testwiki --set appHost=www.testwiki.com ./bookstack
 ```

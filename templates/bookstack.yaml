@@ -31,9 +31,9 @@ spec:
       containers:
       - env:
         - name: APP_URL
-          value: https://{{ required "appHost is required" $.Values.appHost }}
+          value: {{ printf "%s%s" "https://" ( required "appHost is required" $.Values.appHost ) | quote }}
         - name: DB_HOST
-          value: {{ printf "%s-%s" $.Release.Name "mysql" }}:3306
+          value: {{ printf "%s-%s:%s" $.Release.Name "mysql" "3306" | quote }}
         - name: DB_DATABASE
           value: bookstack
         - name: DB_USERNAME
@@ -48,11 +48,11 @@ spec:
           value: "true"
           {{- if $.Values.azuread.enabled }}
         - name: AZURE_TENANT
-          value: {{ required "azuread.tenantId is required" $.Values.azuread.tenantId }}
+          value: {{ required "azuread.tenantId is required" $.Values.azuread.tenantId | quote }}
         - name: AZURE_APP_ID
-          value: {{ required "azuread.appId is required" $.Values.azuread.appId }}
+          value: {{ required "azuread.appId is required" $.Values.azuread.appId | quote }}
         - name: AZURE_APP_SECRET
-          value: {{ required "azuread.appSecret is required" $.Values.azuread.appSecret }}
+          value: {{ required "azuread.appSecret is required" $.Values.azuread.appSecret | quote }}
         - name: AZURE_AUTO_REGISTER
           value: "true"
         - name: AZURE_AUTO_CONFIRM_EMAIL
@@ -60,17 +60,17 @@ spec:
           {{- end }}
           {{- if $.Values.smtp.enabled }}
         - name: MAIL_HOST
-          value: {{ required "smtp.host is required" $.Values.smtp.host }}
+          value: {{ required "smtp.host is required" $.Values.smtp.host | quote }}
         - name: MAIL_PORT
-          value: {{ required "smtp.port is required" $.Values.smtp.port }}
+          value: {{ required "smtp.port is required" $.Values.smtp.port | quote }}
         - name: MAIL_USERNAME
-          value: {{ required "smtp.username is required" $.Values.smtp.username }}
+          value: {{ required "smtp.username is required" $.Values.smtp.username | quote }}
         - name: MAIL_PASSWORD
-          value: {{ required "smtp.password is required" $.Values.smtp.password }}
+          value: {{ required "smtp.password is required" $.Values.smtp.password | quote }}
         - name: MAIL_FROM
-          value: {{ required "smtp.fromAddress is required" $.Values.smtp.fromAddress }}
+          value: {{ required "smtp.fromAddress is required" $.Values.smtp.fromAddress | quote }}
         - name: MAIL_FROM_NAME
-          value: {{ required "smtp.fromName is required" $.Values.smtp.fromName }}
+          value: {{ required "smtp.fromName is required" $.Values.smtp.fromName | quote }}
         - name: MAIL_ENCRYPTION
           value: "null"
           {{- end }}
