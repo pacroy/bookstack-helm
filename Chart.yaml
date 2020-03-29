@@ -2,5 +2,5 @@ apiVersion: v2
 name: bookstack
 description: Wiki application made by Bookstack and MySQL
 type: application
-version: 0.1.0
+version: 1.0.0
 appVersion: 0.27.5

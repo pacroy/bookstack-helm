@@ -1,0 +1,74 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: bookstack-mysql
+  name: {{ printf "%s-%s" $.Release.Name "mysql" }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: 1
+  strategy: 
+    type: Recreate
+  selector:
+    matchLabels:
+      app: bookstack-mysql
+  template:
+    metadata:
+      labels:
+        app: bookstack-mysql
+    spec:
+      initContainers:
+      - image: alpine
+        name: bookstack-mysql-init
+        command: ["rm"]
+        args: ["-rf", "/mnt/lost+found/"]
+        resources:
+          requests:
+            cpu: 250m
+            memory: 256Mi
+        volumeMounts:
+        - mountPath: /mnt/
+          name: bookstack-mysql
+      containers:
+      - env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: secret
+        - name: MYSQL_DATABASE
+          value: bookstack
+        - name: MYSQL_USER
+          value: bookstack
+        - name: MYSQL_PASSWORD
+          value: secret
+        image: mysql:5.7
+        name: bookstack-mysql
+        ports:
+        - containerPort: 3306
+          name: mysql
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 250m
+            memory: 256Mi
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: bookstack-mysql
+      volumes:
+      - name: bookstack-mysql
+        persistentVolumeClaim:
+          claimName: {{ printf "%s-%s" $.Release.Name "mysql" }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: bookstack-mysql
+  name: {{ printf "%s-%s" $.Release.Name "mysql" }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  ports:
+  - port: 3306
+    protocol: TCP
+    targetPort: 3306
+  selector:
+    app: bookstack-mysql
+  type: ClusterIP

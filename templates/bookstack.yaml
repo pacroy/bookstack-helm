@@ -1,0 +1,98 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: bookstack
+  name: {{ printf "%s-%s" $.Release.Name "bookstack" }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: 1
+  strategy: 
+    type: Recreate
+  selector:
+    matchLabels:
+      app: bookstack
+  template:
+    metadata:
+      labels:
+        app: bookstack
+    spec:
+      containers:
+      - env:
+        - name: APP_URL
+          value: https://{{ $.Values.appHost }}
+        - name: DB_HOST
+          value: {{ printf "%s-%s" $.Release.Name "mysql" }}:3306
+        - name: DB_DATABASE
+          value: bookstack
+        - name: DB_USERNAME
+          value: bookstack
+        - name: DB_PASSWORD
+          value: secret
+        - name: APP_VIEWS_BOOKS
+          value: grid
+        - name: SESSION_LIFETIME
+          value: "1440"
+        - name: SESSION_SECURE_COOKIE
+          value: "true"
+          {{- if $.Values.azuread.enabled }}
+        - name: AZURE_TENANT
+          value: {{ $.Values.azuread.tenantId }}
+        - name: AZURE_APP_ID
+          value: {{ $.Values.azuread.appId }}
+        - name: AZURE_APP_SECRET
+          value: {{ $.Values.azuread.appSecret }}
+        - name: AZURE_AUTO_REGISTER
+          value: "true"
+        - name: AZURE_AUTO_CONFIRM_EMAIL
+          value: "true"
+          {{- end }}
+          {{- if $.Values.smtp.enabled }}
+        - name: MAIL_HOST
+          value: {{ $.Values.smtp.host }}
+        - name: MAIL_PORT
+          value: {{ $.Values.smtp.port }}
+        - name: MAIL_USERNAME
+          value: {{ $.Values.smtp.username }}
+        - name: MAIL_PASSWORD
+          value: {{ $.Values.smtp.password }}
+        - name: MAIL_FROM
+          value: {{ $.Values.smtp.fromAddress }}
+        - name: MAIL_FROM_NAME
+          value: {{ $.Values.smtp.fromName }}
+        - name: MAIL_ENCRYPTION
+          value: "null"
+          {{- end }}
+        image: solidnerd/bookstack:0.27.5
+        name: bookstack
+        ports:
+        - containerPort: 80
+          name: bookstack
+          protocol: TCP
+        resources:
+          requests:
+            cpu: 250m
+            memory: 256Mi
+        volumeMounts:
+        - mountPath: /var/www/bookstack/public/uploads
+          name: bookstack-uploads
+      volumes:
+      - name: bookstack-uploads
+        persistentVolumeClaim:
+          claimName: {{ printf "%s-%s" $.Release.Name "uploads" }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: bookstack
+  name: {{ printf "%s-%s" $.Release.Name "bookstack" }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: bookstack
+  type: ClusterIP
