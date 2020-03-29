@@ -49,17 +49,17 @@ spec:
           {{- end }}
           {{- if $.Values.smtp.enabled }}
         - name: MAIL_HOST
-          value: {{ $.Values.smtp.host }}
+          value: {{ required "smtp.host is required" $.Values.smtp.host }}
         - name: MAIL_PORT
-          value: {{ $.Values.smtp.port }}
+          value: {{ required "smtp.port is required" $.Values.smtp.port }}
         - name: MAIL_USERNAME
-          value: {{ $.Values.smtp.username }}
+          value: {{ required "smtp.username is required" $.Values.smtp.username }}
         - name: MAIL_PASSWORD
-          value: {{ $.Values.smtp.password }}
+          value: {{ required "smtp.password is required" $.Values.smtp.password }}
         - name: MAIL_FROM
-          value: {{ $.Values.smtp.fromAddress }}
+          value: {{ required "smtp.fromAddress is required" $.Values.smtp.fromAddress }}
         - name: MAIL_FROM_NAME
-          value: {{ $.Values.smtp.fromName }}
+          value: {{ required "smtp.fromName is required" $.Values.smtp.fromName }}
         - name: MAIL_ENCRYPTION
           value: "null"
           {{- end }}
