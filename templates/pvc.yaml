@@ -18,6 +18,7 @@ metadata:
   labels:
     app: {{ printf "%s-%s" $.Release.Name "bookstack" }}
   name: {{ printf "%s-%s" $.Release.Name "uploads" }}
+  namespace: {{ .Release.Namespace }}
 spec:
   accessModes:
   - ReadWriteOnce
