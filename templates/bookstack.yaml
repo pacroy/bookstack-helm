@@ -77,7 +77,7 @@ spec:
         image: solidnerd/bookstack:0.29.1
         name: bookstack
         ports:
-        - containerPort: 80
+        - containerPort: 8080
           name: bookstack
           protocol: TCP
         resources:
@@ -103,7 +103,7 @@ spec:
   ports:
   - port: 8080
     protocol: TCP
-    targetPort: 80
+    targetPort: 8080
   selector:
     app: {{ printf "%s-%s" $.Release.Name "bookstack" }}
   type: ClusterIP
