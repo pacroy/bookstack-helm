@@ -18,16 +18,21 @@ spec:
         app: {{ printf "%s-%s" $.Release.Name "bookstack" }}
     spec:
       initContainers:
+      - image: busybox
+        name: volume-init
+        command:
+          - sh
+          - "-c"
+          - "rm -rf /mnt/uploads/lost+found && chown -R www-data:www-data /mnt/uploads"
+        volumeMounts:
+        - mountPath: /mnt/uploads
+          name: bookstack-uploads
       - image: mysql:5.7
         name: bookstack-init
         command: 
           - bash
           - "-c"
           - "while ! mysqladmin ping --host={{ printf "%s-%s" $.Release.Name "mysql" }} --password=secret; do sleep 5; done;"
-        resources:
-            requests:
-              cpu: 250m
-              memory: 256Mi
       containers:
       - env:
         - name: APP_URL

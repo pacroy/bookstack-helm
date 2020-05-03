@@ -18,7 +18,7 @@ spec:
         app: {{ printf "%s-%s" $.Release.Name "mysql" }}
     spec:
       initContainers:
-      - image: alpine
+      - image: busybox
         name: bookstack-mysql-init
         command: 
           - sh
