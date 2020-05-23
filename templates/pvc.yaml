@@ -25,3 +25,17 @@ spec:
   resources:
     requests:
       storage: 5Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: {{ printf "%s-%s" $.Release.Name "bookstack" }}
+  name: {{ printf "%s-%s" $.Release.Name "storage" }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi

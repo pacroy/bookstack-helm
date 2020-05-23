@@ -1,3 +1,7 @@
+### v1.2.0
+* Upgraded Bookstack image to 0.29.3
+* Added PVC to mount at storage folder
+
 ### v1.1.0
 * Upgraded Bookstack image to v0.29.1
 
