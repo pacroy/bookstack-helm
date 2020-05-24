@@ -94,7 +94,7 @@ spec:
         volumeMounts:
         - mountPath: /var/www/bookstack/public/uploads
           name: bookstack-uploads
-        - mountPath: /var/www/bookstack/storage
+        - mountPath: /var/www/bookstack/storage/uploads
           name: bookstack-storage
       volumes:
       - name: bookstack-uploads
