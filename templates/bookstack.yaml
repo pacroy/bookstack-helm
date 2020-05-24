@@ -23,10 +23,12 @@ spec:
         command:
           - sh
           - "-c"
-          - "rm -rf /mnt/uploads/lost+found && chown -R www-data:www-data /mnt/uploads"
+          - "rm -rf /mnt/uploads/lost+found && chown -R www-data:www-data /mnt/uploads && rm -rf /mnt/storage/lost+found && chown -R www-data:www-data /mnt/storage"
         volumeMounts:
         - mountPath: /mnt/uploads
           name: bookstack-uploads
+        - mountPath: /mnt/storage
+          name: bookstack-storage
       - image: mysql:5.7
         name: bookstack-init
         command: 
