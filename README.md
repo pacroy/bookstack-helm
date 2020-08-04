@@ -17,5 +17,5 @@ helm repo update
 ```
 
 ```sh
-helm install <release_name> pacroy/bookstack --namespace=<namespace> --set appHost=<www.yourdomain.com>
+helm install <release_name> pacroy/bookstack --namespace=<namespace> --values values.yaml
 ```
