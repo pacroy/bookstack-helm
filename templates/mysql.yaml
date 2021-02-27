@@ -43,7 +43,7 @@ spec:
           value: secret
         image: mysql:5.7
         name: bookstack-mysql
-        command: ["--max_allowed_packet=24M"]
+        args: ["--max_allowed_packet=24M"]
         ports:
         - containerPort: 3306
           name: mysql
