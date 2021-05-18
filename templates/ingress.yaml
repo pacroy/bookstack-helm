@@ -11,7 +11,7 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   rules:
-  - host: {{ $.Values.appHost }}
+  - host: {{ .Values.appHost }}
     http:
       paths:
       - backend:
@@ -20,5 +20,5 @@ spec:
         path: /
   tls:
   - hosts:
-    - {{ $.Values.appHost }}
+    - {{ .Values.appHost }}
     secretName: {{ printf "%s-%s" $.Release.Name "bookstack" }}
