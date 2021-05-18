@@ -1,5 +1,7 @@
 # Bookstack Helm Chart
 
+[![Lint Code Base](https://github.com/pacroy/bookstack-helm/actions/workflows/linter.yml/badge.svg)](https://github.com/pacroy/bookstack-helm/actions/workflows/linter.yml) [![Test and Publish Chart](https://github.com/pacroy/bookstack-helm/actions/workflows/test-and-publish.yml/badge.svg)](https://github.com/pacroy/bookstack-helm/actions/workflows/test-and-publish.yml)
+
 ## Local Installation
 
 ```sh
