@@ -14,10 +14,13 @@ spec:
   - host: {{ .Values.appHost }}
     http:
       paths:
-      - backend:
-          serviceName: {{ printf "%s-%s" $.Release.Name "bookstack" }}
-          servicePort: 8080
-        path: /
+      - path: /
+        backend:
+          service:
+              name: {{ printf "%s-%s" $.Release.Name "bookstack" }}
+              port:
+                number: 8080
+        
   tls:
   - hosts:
     - {{ .Values.appHost }}
