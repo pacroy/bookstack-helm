@@ -1,14 +1,15 @@
-appHost: #www.yourwiki.com
+appHost: www.yourwiki.com
+# allowHttp: false
 azuread:
     enabled: false
-    tenantId: #5a5e106e-7166-11ea-bc55-0242ac130003
-    appId: #6667181a-7166-11ea-bc55-0242ac130003
-    appSecret: #thisIsSecret
+    tenantId: 5a5e106e-7166-11ea-bc55-0242ac130003
+    appId: 6667181a-7166-11ea-bc55-0242ac130003
+    appSecret: thisIsSecret
 smtp:
     enabled: false
-    host: #smtp.yourwiki.com
-    port: #"25"
-    username: #user
-    password: #thisIsPassword
-    fromAddress: #do_not_reply@yourwiki.com
-    fromName: #"My Wiki"
+    host: smtp.yourwiki.com
+    port: "25"
+    username: user
+    password: thisIsPassword
+    fromAddress: do_not_reply@yourwiki.com
+    fromName: "My Wiki"

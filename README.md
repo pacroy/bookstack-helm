@@ -9,13 +9,7 @@ helm install <release_name> . --namespace=<namespace> --set appHost=<www.yourdom
 ## Installation from Repository
 
 ```sh
-helm repo add pacroy https://raw.githubusercontent.com/pacroy/helm-repo/master
-```
-
-```sh
+helm repo add pacroy https://pacroy.github.io/helm-repo/
 helm repo update
-```
-
-```sh
 helm install <release_name> pacroy/bookstack --namespace=<namespace> --values values.yaml
 ```

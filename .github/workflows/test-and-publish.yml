@@ -1,0 +1,47 @@
+name: Test and Publish Chart
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Test Chart Template
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: Test Chart
+        shell: bash
+        run: |
+          helm template test-release . \
+            --values values.yaml
+      - name: Checkout Helm Repo
+        uses: actions/checkout@v2
+        with:
+          repository: pacroy/helm-repo
+          path: 'helm-repo'
+          ssh-key: '${{ secrets.HELM_REPO_SSH_KEY }}'
+      - name: Package Chart
+        shell: bash
+        run: |
+          sed -i -e "s/sha_to_be_replaced/${GITHUB_SHA:0:7}/g" Chart.yaml
+          cd helm-repo
+          helm package ..
+          helm repo index .
+          new_archive=$(git ls-files --other --exclude-standard | head -n 1)
+
+          git config --local user.email "github-actions[bot]@${GITHUB_REPOSITORY/\//.}"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          git commit -am "Add ${new_archive}"
+      - name: Push Chart
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        shell: bash
+        run: |
+          cd helm-repo
+          git push
+          
