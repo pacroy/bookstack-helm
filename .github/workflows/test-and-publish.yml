@@ -36,6 +36,11 @@ jobs:
           helm repo index .
           new_archive=$(git ls-files --other --exclude-standard | head -n 1)
 
+          if [ -z "$new_archive" ]; then
+            echo "::error::No new package file. Did you forget to bump up the chart version?"
+            exit 91
+          fi
+
           archive_size=$(stat --printf="%s" "$new_archive")
           max_size=${HELM_MAX_PACKAGE_SIZE:-100000}
           if [ "$archive_size" -gt "$max_size" ]; then
