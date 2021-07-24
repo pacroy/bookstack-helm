@@ -31,8 +31,8 @@ jobs:
         name: List Changed
         run: |
           changed=$(ct list-changed)
-          if [[ -n "$changed" ]]; then
-            echo "::set-output name=changed::true"
+          if [[ -z "$changed" ]]; then
+            echo "::error::No chart changes detected"
           fi
       - name: Lint
         run: ct lint
