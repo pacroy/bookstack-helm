@@ -32,6 +32,7 @@ jobs:
         name: List Changed
         run: |
           changed=$(ct list-changed)
+          echo "$changed"
           if [[ -z "$changed" ]]; then
             echo "::error::No chart changes detected"
             exit 99
