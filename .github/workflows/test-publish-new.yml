@@ -41,4 +41,26 @@ jobs:
         uses: helm/kind-action@v1.2.0
       - name: Install
         run: ct install
+  publish:
+    name: Publish Chart
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+      - name: Set up Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: v3.5.3
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.2.1
+        env:
+          CR_OWNER: pacroy
+          CR_GIT_REPO: helm
+          CR_TOKEN: "${{ secrets.HELM_REPO_TOKEN }}"
 
