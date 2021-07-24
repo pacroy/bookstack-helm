@@ -33,6 +33,7 @@ jobs:
           changed=$(ct list-changed)
           if [[ -z "$changed" ]]; then
             echo "::error::No chart changes detected"
+            exit 99
           fi
       - name: Lint
         run: ct lint
