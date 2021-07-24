@@ -45,6 +45,7 @@ jobs:
   publish:
     name: Publish Chart
     runs-on: ubuntu-20.04
+    needs: [test]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
