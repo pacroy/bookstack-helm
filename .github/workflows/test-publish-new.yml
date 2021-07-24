@@ -11,6 +11,8 @@ jobs:
   test:
     name: Test Chart
     runs-on: ubuntu-20.04
+    env:
+      CT_TARGET_BRANCH: main
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -27,8 +29,6 @@ jobs:
         uses: helm/chart-testing-action@v2.1.0
       - id: list-changed
         name: List Changed
-        env:
-          CT_TARGET_BRANCH: main
         run: |
           changed=$(ct list-changed)
           if [[ -n "$changed" ]]; then
