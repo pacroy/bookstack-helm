@@ -81,7 +81,7 @@ spec:
         - name: MAIL_ENCRYPTION
           value: "null"
           {{- end }}
-        image: solidnerd/bookstack:21.12
+        image: solidnerd/bookstack:22.04.02
         name: bookstack
         ports:
         - containerPort: 8080
