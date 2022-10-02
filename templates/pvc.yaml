@@ -2,8 +2,8 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   labels:
-    app: {{ printf "%s-%s" $.Release.Name "mysql" }}
-  name: {{ printf "%s-%s" $.Release.Name "mysql" }}
+    app: {{ printf "%s-%s" .Release.Name "mysql" }}
+  name: {{ printf "%s-%s" .Release.Name "mysql" }}
   namespace: {{ .Release.Namespace }}
 spec:
   accessModes:
@@ -16,8 +16,8 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   labels:
-    app: {{ printf "%s-%s" $.Release.Name "bookstack" }}
-  name: {{ printf "%s-%s" $.Release.Name "uploads" }}
+    app: {{ printf "%s-%s" .Release.Name "bookstack" }}
+  name: {{ printf "%s-%s" .Release.Name "uploads" }}
   namespace: {{ .Release.Namespace }}
 spec:
   accessModes:
@@ -30,8 +30,8 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   labels:
-    app: {{ printf "%s-%s" $.Release.Name "bookstack" }}
-  name: {{ printf "%s-%s" $.Release.Name "storage" }}
+    app: {{ printf "%s-%s" .Release.Name "bookstack" }}
+  name: {{ printf "%s-%s" .Release.Name "storage" }}
   namespace: {{ .Release.Namespace }}
 spec:
   accessModes:

@@ -6,7 +6,7 @@ metadata:
     kubernetes.io/ingress.allow-http: {{ .Values.allowHttp | default "false" | quote }}
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/proxy-body-size: 10m
-  name: {{ printf "%s-%s" $.Release.Name "bookstack" }}
+  name: {{ printf "%s-%s" .Release.Name "bookstack" }}
   namespace: {{ .Release.Namespace }}
 spec:
   rules:
@@ -17,11 +17,11 @@ spec:
         pathType: Prefix
         backend:
           service:
-              name: {{ printf "%s-%s" $.Release.Name "bookstack" }}
+              name: {{ printf "%s-%s" .Release.Name "bookstack" }}
               port:
                 number: 8080
         
   tls:
   - hosts:
     - {{ .Values.appHost }}
-    secretName: {{ printf "%s-%s" $.Release.Name "bookstack" }}
+    secretName: {{ printf "%s-%s" .Release.Name "bookstack" }}
