@@ -2,8 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: {{ printf "%s-%s" $.Release.Name "mysql" }}
-  name: {{ printf "%s-%s" $.Release.Name "mysql" }}
+    app: {{ printf "%s-%s" .Release.Name "mysql" }}
+  name: {{ printf "%s-%s" .Release.Name "mysql" }}
   namespace: {{ .Release.Namespace }}
 spec:
   replicas: 1
@@ -11,11 +11,11 @@ spec:
     type: Recreate
   selector:
     matchLabels:
-      app: {{ printf "%s-%s" $.Release.Name "mysql" }}
+      app: {{ printf "%s-%s" .Release.Name "mysql" }}
   template:
     metadata:
       labels:
-        app: {{ printf "%s-%s" $.Release.Name "mysql" }}
+        app: {{ printf "%s-%s" .Release.Name "mysql" }}
     spec:
       initContainers:
       - image: busybox
@@ -58,14 +58,14 @@ spec:
       volumes:
       - name: bookstack-mysql
         persistentVolumeClaim:
-          claimName: {{ printf "%s-%s" $.Release.Name "mysql" }}
+          claimName: {{ printf "%s-%s" .Release.Name "mysql" }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: {{ printf "%s-%s" $.Release.Name "mysql" }}
-  name: {{ printf "%s-%s" $.Release.Name "mysql" }}
+    app: {{ printf "%s-%s" .Release.Name "mysql" }}
+  name: {{ printf "%s-%s" .Release.Name "mysql" }}
   namespace: {{ .Release.Namespace }}
 spec:
   ports:
@@ -73,5 +73,5 @@ spec:
     protocol: TCP
     targetPort: 3306
   selector:
-    app: {{ printf "%s-%s" $.Release.Name "mysql" }}
+    app: {{ printf "%s-%s" .Release.Name "mysql" }}
   type: ClusterIP
