@@ -55,6 +55,7 @@ spec:
           value: "true"
         - name: STORAGE_TYPE
           value: {{ default "local_secure" .Values.storageType | quote }}
+          {{- if .Values.azuread }}
           {{- if .Values.azuread.enabled }}
         - name: AZURE_TENANT
           value: {{ required "azuread.tenantId is required" .Values.azuread.tenantId | quote }}
@@ -67,6 +68,8 @@ spec:
         - name: AZURE_AUTO_CONFIRM_EMAIL
           value: "true"
           {{- end }}
+          {{- end }}
+          {{- if .Values.smtp }}
           {{- if .Values.smtp.enabled }}
         - name: MAIL_HOST
           value: {{ required "smtp.host is required" .Values.smtp.host | quote }}
@@ -82,6 +85,7 @@ spec:
           value: {{ required "smtp.fromName is required" .Values.smtp.fromName | quote }}
         - name: MAIL_ENCRYPTION
           value: "null"
+          {{- end }}
           {{- end }}
         image: solidnerd/bookstack:22.04.02
         name: bookstack

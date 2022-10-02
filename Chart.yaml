@@ -3,7 +3,7 @@ name: bookstack
 description: Wiki application made by Bookstack and MySQL
 type: application
 version: 1.6.0
-appVersion: 22.04
+appVersion: "22.04"
 sources:
   - https://github.com/pacroy/bookstack-helm
 maintainers:
