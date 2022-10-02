@@ -53,6 +53,8 @@ spec:
           value: "1440"
         - name: SESSION_SECURE_COOKIE
           value: "true"
+        - name: STORAGE_TYPE
+          value: {{ default "local_secure" $.Values.storageType | quote }}
           {{- if $.Values.azuread.enabled }}
         - name: AZURE_TENANT
           value: {{ required "azuread.tenantId is required" $.Values.azuread.tenantId | quote }}
