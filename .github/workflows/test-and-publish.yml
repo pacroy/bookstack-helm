@@ -22,7 +22,7 @@ jobs:
       - name: Checkout Helm Repo
         uses: actions/checkout@v3
         with:
-          repository: pacroy/helm-repo
+          repository: smithatlanta/helm-repo
           path: 'helm-repo'
           ssh-key: '${{ secrets.HELM_REPO_SSH_KEY }}'
       - name: Package Chart

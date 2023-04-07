@@ -3,11 +3,11 @@ name: bookstack
 description: Wiki application made by Bookstack and MySQL
 type: application
 version: 1.6.0
-appVersion: "22.04"
+appVersion: "23.02.3"
 sources:
-  - https://github.com/pacroy/bookstack-helm
+  - https://github.com/smithatlanta/bookstack-helm
 maintainers:
-  - name: Par
-    email: pacroy@gmail.com
+  - name: Mike
+    email: smithatlanta@gmail.com
 annotations:
   sha: "sha_to_be_replaced"

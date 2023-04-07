@@ -1,4 +1,4 @@
-# appHost: www.yourwiki.com
+appHost: wiki.mikeandmel.com
 # allowHttp: false
 # azuread:
 #     enabled: true

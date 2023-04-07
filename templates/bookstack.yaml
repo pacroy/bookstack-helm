@@ -46,7 +46,7 @@ spec:
         - name: DB_USERNAME
           value: bookstack
         - name: DB_PASSWORD
-          value: secret
+          value: SMITTY!69smitty!69
         - name: APP_VIEWS_BOOKS
           value: grid
         - name: SESSION_LIFETIME
