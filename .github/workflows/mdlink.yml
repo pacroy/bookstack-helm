@@ -1,0 +1,14 @@
+name: Check Markdown Links
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  markdown-link-check:
+    name: Check Markdown Links
+    uses: pacroy/gh-common-workflows/.github/workflows/wf_mdlink.yml@v1
+    secrets: inherit
