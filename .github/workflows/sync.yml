@@ -45,7 +45,6 @@ jobs:
           rm -f "target/${folder}/workflows/_*.yml"
           rm -f "target/${folder}/workflows/markdown-link-check.yml"
           rm -rf "target/${folder}/markdown-link-check"
-          rm -rf "target/${folder}/linters"
       - name: Create Job Summary
         shell: bash
         run: |
