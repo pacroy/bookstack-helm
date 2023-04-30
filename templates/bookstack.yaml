@@ -87,7 +87,7 @@ spec:
           value: "null"
           {{- end }}
           {{- end }}
-        image: solidnerd/bookstack:22.04.02
+        image: solidnerd/bookstack:23.2.3
         name: bookstack
         ports:
         - containerPort: 8080
