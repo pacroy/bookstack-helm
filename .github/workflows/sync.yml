@@ -1,0 +1,73 @@
+name: Sync Files
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  SOURCE_REPO: pacroy/gh-common-workflows
+  SOURCE_REF: v1
+
+jobs:
+  sync:
+    name: Sync Files
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Target
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.SYNC_PAT }}
+          path: 'target'
+          ref: ${{ github.head_ref }}
+      - name: Determine Ref
+        id: get_ref
+        shell: bash
+        if: ${{ github.repository != env.SOURCE_REPO }}
+        run: |
+          echo "ref=$SOURCE_REF" >> "$GITHUB_OUTPUT"
+      - name: Checkout Source
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ env.SOURCE_REPO }}
+          ref: ${{ steps.get_ref.outputs.ref }}
+          token: ${{ secrets.SYNC_PAT }}
+          path: 'source'
+      - name: Print files and directories
+        shell: bash
+        run: tree -aI "\.git" "$(pwd)"
+      - name: Sync files
+        shell: bash
+        run: |
+          folder=".github"
+          rsync --recursive --exclude="workflows/_*.yml" --exclude="workflows/wf_*.yml" "source/${folder}/" "target/${folder}"
+
+          rm -f "target/${folder}/workflows/_*.yml"
+          rm -f "target/${folder}/workflows/markdown-link-check.yml"
+          rm -rf "target/${folder}/markdown-link-check"
+      - name: Create Job Summary
+        shell: bash
+        run: |
+          {
+            cd target
+            git add .
+            synced_files="$(git status --porcelain)"
+
+            if [ -z "${synced_files}" ]; then
+              echo ":smile: No change detected. Everything is already in sync."
+            else
+              echo ":sunglasses: The following changes have been made:"
+              echo "\`\`\`console"
+              echo "${synced_files}"
+              echo "\`\`\`"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Commit and push
+        shell: bash
+        run: |
+          cd target
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          if git commit -m "[AUTO] Sync files"; then
+            git push
+          fi
