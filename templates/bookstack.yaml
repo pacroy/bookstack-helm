@@ -84,10 +84,10 @@ spec:
         - name: MAIL_FROM_NAME
           value: {{ required "smtp.fromName is required" .Values.smtp.fromName | quote }}
         - name: MAIL_ENCRYPTION
-          value: "null"
+          value: "tls"
           {{- end }}
           {{- end }}
-        image: solidnerd/bookstack:23.2.3
+        image: solidnerd/bookstack:23.6.2
         name: bookstack
         ports:
         - containerPort: 8080
