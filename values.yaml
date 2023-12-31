@@ -1,4 +1,5 @@
 # appHost: www.yourwiki.com
+# appKey: thisIsAppKey
 # allowHttp: false
 # azuread:
 #     enabled: true

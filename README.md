@@ -5,7 +5,7 @@
 ## Local Installation
 
 ```sh
-helm install <release_name> . --namespace=<namespace> --set appHost=<www.yourdomain.com>
+helm upgrade --install <release_name> . --namespace=<namespace> --set appHost=<www.yourdomain.com>
 ```
 
 ## Installation from Repository
@@ -13,5 +13,5 @@ helm install <release_name> . --namespace=<namespace> --set appHost=<www.yourdom
 ```sh
 helm repo add pacroy https://pacroy.github.io/helm-repo/
 helm repo update
-helm install <release_name> pacroy/bookstack --namespace=<namespace> --values values.yaml
+helm upgrade --install <release_name> pacroy/bookstack --namespace=<namespace> --values values.yaml
 ```

@@ -37,6 +37,8 @@ spec:
           - "while ! mysqladmin ping --host={{ printf "%s-%s" .Release.Name "mysql" }} --password=secret; do sleep 5; done;"
       containers:
       - env:
+        - name: APP_KEY
+          value: {{ printf "%s" ( required "appKey is required" .Values.appKey ) | quote }}
         - name: APP_URL
           value: {{ printf "%s%s" "https://" ( required "appHost is required" .Values.appHost ) | quote }}
         - name: DB_HOST
@@ -87,7 +89,7 @@ spec:
           value: "tls"
           {{- end }}
           {{- end }}
-        image: solidnerd/bookstack:23.6.2
+        image: solidnerd/bookstack:23.12
         name: bookstack
         ports:
         - containerPort: 8080
