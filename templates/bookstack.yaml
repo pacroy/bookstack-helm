@@ -90,7 +90,6 @@ spec:
           {{- end }}
           {{- end }}
         image: solidnerd/bookstack:23.12
-        imagePullPolicy: Always
         name: bookstack
         ports:
         - containerPort: 8080
