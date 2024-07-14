@@ -37,10 +37,8 @@ spec:
           - "while ! mysqladmin ping --host={{ printf "%s-%s" .Release.Name "mysql" }} --password=secret; do sleep 5; done;"
       containers:
       - env:
-        {{- if .Values.appKey }}
         - name: APP_KEY
           value: {{ printf "%s" .Values.appKey | quote }}
-        {{- end }}
         - name: APP_URL
           value: {{ printf "%s%s" "https://" ( required "appHost is required" .Values.appHost ) | quote }}
         - name: DB_HOST
