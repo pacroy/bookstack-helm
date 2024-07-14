@@ -38,7 +38,7 @@ spec:
       containers:
       - env:
         - name: APP_KEY
-          value: {{ printf "%s" .Values.appKey | quote }}
+          value: {{ printf "%s" ( required "appKey is required" .Values.appKey ) | quote }}
         - name: APP_URL
           value: {{ printf "%s%s" "https://" ( required "appHost is required" .Values.appHost ) | quote }}
         - name: DB_HOST
