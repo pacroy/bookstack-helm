@@ -12,6 +12,10 @@ helm upgrade --install <release_name> . --namespace=<namespace> --create-namespa
     --set smtp.enabled=false
 ```
 
+> [!IMPORTANT]  
+> `appKey` must be set to 32-character key. Container would end up in error if not set. App would show `An unknown error occurred` if set to blank.
+`
+
 ## Installation from Repository
 
 ```sh
