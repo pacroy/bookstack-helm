@@ -1,5 +1,5 @@
 appHost: www.yourwiki.com
-appKey: thisIsAppKey
+# appKey: base64:VGhpc0lzQW5FeGFtcGxlQXBwS2V5Q2hhbmdlVGhpcyE=
 # allowHttp: false
 azuread:
     enabled: true
