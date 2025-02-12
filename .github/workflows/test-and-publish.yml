@@ -4,23 +4,29 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
+    paths:
+      - 'templates/**'
+      - Chart.yaml
   pull_request:
     branches: [main]
+    paths:
+      - 'templates/**'
+      - Chart.yaml
 
 jobs:
   test:
     name: Test Chart Template
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Test Chart
         shell: bash
         run: |
           helm template test-release . \
             --values values-test.yaml
       - name: Checkout Helm Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: pacroy/helm-repo
           path: 'helm-repo'

@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Target
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.SYNC_PAT }}
           path: 'target'
@@ -27,7 +27,7 @@ jobs:
         run: |
           echo "ref=$SOURCE_REF" >> "$GITHUB_OUTPUT"
       - name: Checkout Source
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: ${{ env.SOURCE_REPO }}
           ref: ${{ steps.get_ref.outputs.ref }}
