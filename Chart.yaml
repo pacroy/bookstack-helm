@@ -2,8 +2,8 @@ apiVersion: v2
 name: bookstack
 description: Wiki application made by Bookstack and MySQL
 type: application
-version: 1.10.0
-appVersion: "24.5"
+version: 1.11.0
+appVersion: "24.12"
 sources:
   - https://github.com/pacroy/bookstack-helm
 maintainers:
