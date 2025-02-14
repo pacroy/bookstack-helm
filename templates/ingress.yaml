@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    kubernetes.io/ingress.class: nginx
+    spec.ingressClassName: nginx
     kubernetes.io/ingress.allow-http: {{ .Values.allowHttp | default "false" | quote }}
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/proxy-body-size: 10m
