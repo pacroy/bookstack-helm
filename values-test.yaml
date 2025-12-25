@@ -14,3 +14,8 @@ smtp:
     password: thisIsPassword
     fromAddress: do_not_reply@yourwiki.com
     fromName: "My Wiki"
+ingress:
+    certManager:
+        enabled: true
+        issuerType: cluster-issuer
+        issuerName: letsencrypt-prod

@@ -14,3 +14,11 @@
 #     password: thisIsPassword
 #     fromAddress: do_not_reply@yourwiki.com
 #     fromName: "My Wiki"
+# ingress:
+#   certManager:
+#     enabled: true
+#     issuerType: cluster-issuer  # or "issuer" for namespace-scoped issuer
+#     issuerName: letsencrypt-prod
+#   tls:
+#     secretName: ""  # defaults to <release-name>-bookstack if not set
+#   annotations: {}  # additional custom annotations
