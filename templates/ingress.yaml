@@ -4,7 +4,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.allow-http: {{ .Values.allowHttp | default "false" | quote }}
     {{- if hasKey .Values "ingress" }}
-    {{- if and (hasKey .Values.ingress "certManager") .Values.ingress.certManager.enabled }}
+    {{- if and (hasKey .Values.ingress "certManager") .Values.ingress.certManager .Values.ingress.certManager.enabled }}
     {{- if eq (.Values.ingress.certManager.issuerType | default "cluster-issuer") "cluster-issuer" }}
     cert-manager.io/cluster-issuer: {{ .Values.ingress.certManager.issuerName | default "letsencrypt-prod" }}
     {{- else if eq .Values.ingress.certManager.issuerType "issuer" }}
@@ -39,7 +39,7 @@ spec:
   tls:
   - hosts:
     - {{ .Values.appHost }}
-    {{- if and (hasKey .Values "ingress") (hasKey .Values.ingress "tls") .Values.ingress.tls.secretName }}
+    {{- if and (hasKey .Values "ingress") (hasKey .Values.ingress "tls") .Values.ingress.tls .Values.ingress.tls.secretName }}
     secretName: {{ .Values.ingress.tls.secretName }}
     {{- else }}
     secretName: {{ printf "%s-%s" .Release.Name "bookstack" }}
