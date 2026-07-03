@@ -29,7 +29,7 @@ spec:
           name: bookstack-uploads
         - mountPath: /mnt/storage
           name: bookstack-storage
-      - image: mysql:5.7
+      - image: mysql:8.0
         name: bookstack-init
         command: 
           - bash
@@ -89,7 +89,7 @@ spec:
           value: "tls"
           {{- end }}
           {{- end }}
-        image: solidnerd/bookstack:25.12
+        image: solidnerd/bookstack:26.5
         name: bookstack
         ports:
         - containerPort: 8080
