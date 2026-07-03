@@ -89,7 +89,7 @@ The `bookstack.yaml` Deployment uses init containers for:
 2. MySQL readiness - Waits for MySQL to be available before starting the app
 
 ### Resource Specifications
-- Uses specific image tags (mysql:5.7, busybox)
+- Uses specific image tags (mysql:8.0, busybox)
 - Session lifetime: 1440 minutes (24 hours)
 - App view default: grid
 - Secure cookie enforcement: enabled for HTTPS
