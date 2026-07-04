@@ -41,7 +41,7 @@ spec:
           value: bookstack
         - name: MYSQL_PASSWORD
           value: secret
-        image: mysql:5.7
+        image: mysql:8.0
         name: bookstack-mysql
         args: ["--max_allowed_packet=24M"]
         ports:
