@@ -5,7 +5,6 @@ metadata:
     kubernetes.io/ingress.allow-http: {{ .Values.allowHttp | default "false" | quote }}
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.org/client-max-body-size: "10m"
-    acme.cert-manager.io/http01-edit-in-place: "true"
   name: {{ printf "%s-%s" .Release.Name "bookstack" }}
   namespace: {{ .Release.Namespace }}
 spec:
