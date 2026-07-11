@@ -1,116 +1,116 @@
-# Copilot Instructions for bookstack-helm
+# Copilot Instructions for gh-common-workflows
 
-## Overview
-This repository is a Kubernetes Helm chart for deploying BookStack (a wiki application) with MySQL on Kubernetes. The chart handles the entire BookStack application stack including the web app, database, storage volumes, ingress, and certificate management.
+## Repository Purpose
 
-## Build, Test, and Lint Commands
+This is a centralized GitHub Actions workflows repository that serves as a **source for syncing common workflows** to multiple target repositories. The goal is to maintain workflow configurations in one place and automatically propagate them to all dependent repositories.
 
-### Test Helm Template
-Validate that the Helm chart templates render correctly without syntax errors:
-```bash
-helm template test-release . --values values-test.yaml
-```
+## Architecture
 
-### Lint YAML and Code
-Linting runs automatically via GitHub Actions on push/PR. The workflow uses a shared linter workflow from `pacroy/gh-common-workflows`. Linting includes:
-- YAML validation (via `.github/linters/.yaml-lint.yml`)
-- Markdown linting (via `.github/linters/.markdown-lint.yml`)
-- Copy detection (via `.github/linters/.jscpd.json`)
+### Workflow Structure
 
-To lint locally, use `yamllint` and `markdownlint` on files matching the configuration files in `.github/linters/`.
+**Public Workflows** (distributed to target repos):
+- `linter.yml` - Calls reusable `wf_linter.yml`
+- `mdlink.yml` - Calls reusable `wf_mdlink.yml`
 
-### Package Helm Chart
-Packages the chart for distribution to the Helm repository:
-```bash
-helm package .
-helm repo index .
-```
+**Reusable Workflows** (internal reference, excluded from sync):
+- `wf_linter.yml` - Implements Super-linter for code linting
+- `wf_mdlink.yml` - Implements Markdown link checking
 
-## High-Level Architecture
+**Utility Workflows** (internal sync helpers, excluded from sync):
+- `sync.yml` - Syncs `.github/` folder to target repositories via rsync
+- `_sync_secrets.yml` - Syncs GitHub repository secrets across multiple repositories
 
-### Repository Structure
-- **Chart.yaml** - Helm chart metadata (name, version, appVersion, maintainers)
-- **values.yaml** - Default configuration values (commented examples)
-- **values-test.yaml** - Test values for validation
-- **templates/** - Kubernetes resource manifests:
-  - `bookstack.yaml` - BookStack Deployment with init containers, environment variables, persistent volume mounts
-  - `mysql.yaml` - MySQL Deployment with persistent volume
-  - `pvc.yaml` - PersistentVolumeClaim for uploads and storage
-  - `ingress.yaml` - Nginx Ingress with cert-manager TLS integration
+### Sync Process
 
-### Deployment Architecture
-The chart deploys a complete stack:
-1. **BookStack Container** - Runs the BookStack wiki application
-   - Single replica (Recreate strategy)
-   - Init containers: volume permission setup, MySQL readiness check
-   - Environment variables: APP_KEY, APP_URL, DB credentials, storage type
-   - Volumes: uploads, storage (for persistent data)
-
-2. **MySQL Container** - Dedicated database instance
-   - Single instance (not HA)
-   - Database name: `bookstack`
-   - Default credentials configured in template
-
-3. **Storage** - Two PersistentVolumeClaims
-   - `bookstack-uploads` - User-uploaded files
-   - `bookstack-storage` - Application storage data
-
-4. **Ingress** - Nginx with cert-manager
-   - TLS via Let's Encrypt (letsencrypt-prod ClusterIssuer)
-   - HTTP01 challenge with edit-in-place annotation
-   - Client max body size: 10m
-   - Host configured via `appHost` value
-
-### Key Integration Points
-- **cert-manager** - Automatically issues/renews Let's Encrypt certificates
-- **Azure AD** - Optional Azure AD authentication (controlled via `azuread.enabled`)
-- **SMTP** - Optional email support (controlled via `smtp.enabled`)
-- **Storage Backend** - Supports local_secure or Azure storage via `storageType` value
+The sync system works by:
+1. **Source repo** (this repository) contains all workflow configurations
+2. **Target repos** include a copy of `sync.yml` to pull changes
+3. `sync.yml` uses rsync to copy `.github/` contents while **excluding**:
+   - Workflows starting with `_` (underscore)
+   - Workflows starting with `wf_` (internal reusable)
+   - Old `markdown-link-check.yml` and related directories
+4. Syncs are triggered on PR to `main` or manual `workflow_dispatch`
+5. Changes are auto-committed to target repos using git bot account
 
 ## Key Conventions
 
-### Required Values
-These values must be provided during installation or in values file:
-- `appHost` - Domain name for the wiki (e.g., `www.yourdomain.com`)
-- `appKey` - 32-character base64-encoded encryption key; must be set to non-blank value or app shows "An unknown error occurred"
+### Workflow Naming
+- **Public workflows**: No prefix (e.g., `linter.yml`)
+- **Reusable (internal)**: `wf_` prefix (e.g., `wf_linter.yml`)
+- **Utility/Admin**: `_` prefix (e.g., `_sync_secrets.yml`)
 
-### Optional Features
-- `azuread` - Set `.enabled: true` to enable Azure AD integration with `tenantId`, `appId`, `appSecret`
-- `smtp` - Set `.enabled: true` to enable email with host, port, credentials, sender address
+This naming scheme ensures only public workflows are synced to target repositories.
 
-### Template Naming Conventions
-Resource names follow the pattern: `{{ .Release.Name }}-{{ resource_type }}`
-- Examples: `my-release-bookstack`, `my-release-mysql`, `my-release-bookstack-uploads`
-- This allows multiple installations (different release names) in the same cluster
+### Environment Variables
+- `SOURCE_REPO`: Full repository path (e.g., `pacroy/gh-common-workflows`)
+- `SOURCE_REF`: Git reference for source (e.g., `v1`) - allows version pinning in target repos
+- `REPO_LIST_REGEX`: When `true`, treat repository patterns as regex expressions
+- Secret patterns use regex for flexible matching (e.g., `^SYNC_PAT$`)
 
-### Init Container Pattern
-The `bookstack.yaml` Deployment uses init containers for:
-1. Volume initialization - Fixes ownership and removes lost+found directories (critical for storage access)
-2. MySQL readiness - Waits for MySQL to be available before starting the app
+### File Exclusion in rsync
+Patterns are defined in `sync.yml` under the "Sync files" step:
+```bash
+--exclude="workflows/_*.yml" --exclude="workflows/wf_*.yml"
+rm -f "target/${folder}/workflows/_*.yml"
+rm -f "target/${folder}/workflows/wf_*.yml"
+```
 
-### Resource Specifications
-- Uses specific image tags (mysql:8.4, busybox)
-- Session lifetime: 1440 minutes (24 hours)
-- App view default: grid
-- Secure cookie enforcement: enabled for HTTPS
+Always update both the rsync `--exclude` flags AND the explicit `rm` commands when adding new internal workflows.
 
-### Version Management
-- **Chart version** (Chart.yaml) - Incremented when chart changes
-- **appVersion** (Chart.yaml) - Reflects BookStack application version being packaged
-- **Packaging** - Test workflow checks package size against `HELM_MAX_PACKAGE_SIZE` secret
+## Testing Workflows
 
-## Development Notes
+### Dry-run Workflows
+Several workflows support `workflow_dispatch` with `dry_run` input:
+- `_sync_secrets.yml` - Use `dry_run: true` to preview changes without applying them
+- Test on a specific target repo regex pattern before rolling out
 
-### Testing Changes
-1. Modify templates or values
-2. Run: `helm template test-release . --values values-test.yaml`
-3. Verify output contains expected resources and no errors
+### Linting and Link Checking
+These are automatically triggered on:
+- Push to `main`
+- Pull requests to `main`
+- Manual `workflow_dispatch`
 
-### Adding New Features
-- Add new fields to `values.yaml` (commented if optional)
-- Reference values in templates using `{{ .Values.fieldName }}`
-- Update version in `Chart.yaml`
-- Ensure template renders correctly with `helm template` before PR
+To test locally:
+- **Linting**: Super-linter is configured in `wf_linter.yml` with `VALIDATE_ALL_CODEBASE: true`
+- **Markdown links**: Configured via `.github/mdlink/mlc_config.json`
 
-### Pushing Chart to Repository
-Test/publish workflow automatically packages and publishes to `pacroy/helm-repo` on push to main. Manual trigger available via workflow_dispatch.
+## GitHub Token & Permissions
+
+When setting up sync in target repositories, use a Personal Access Token (`SYNC_PAT`) with:
+
+**Classic token:**
+- `repo` scope (full control of private repositories)
+- `workflow` scope (update GitHub Action workflows)
+
+**Fine-grained token:**
+- Repository > Contents: Read and write
+- Repository > Metadata: Read-only
+- Repository > Secrets: Read and write
+- Repository > Workflows: Read and write
+
+## Configuration Files
+
+- `.github/mdlink/mlc_config.json` - Markdown link checker configuration (retries, timeouts, headers)
+- `.claude/settings.local.json` - Permissions for Claude sessions in this repo
+
+## Making Changes
+
+1. Create a branch from `main`
+2. Update workflows (both public and internal)
+3. Push and create a PR to `main`
+4. Workflows auto-run on PR:
+   - Linter checks code
+   - Markdown link checker validates documentation
+   - Sync workflow shows a preview of what will sync to target repos
+5. Merge PR when ready
+6. To release updates to target repos:
+   - Create a git tag (e.g., `v1`) or update `SOURCE_REF` in target repos
+   - Target repos will pull latest changes on their next sync trigger
+
+## Key Dependencies
+
+- **actions/checkout**: v7.0.0
+- **actions/github-script**: v9.0.0
+- **super-linter/super-linter**: v8.7.0
+- **jpoehnelt/secrets-sync-action**: v1.10.0
+- **gaurav-nelson/github-action-markdown-link-check**: 1.0.17
