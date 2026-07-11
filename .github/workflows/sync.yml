@@ -7,7 +7,9 @@ on:
 
 env:
   SOURCE_REPO: pacroy/gh-common-workflows
-  SOURCE_REF: v1
+
+permissions:
+  contents: read
 
 jobs:
   sync:
@@ -15,24 +17,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Target
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           token: ${{ secrets.SYNC_PAT }}
-          path: 'target'
+          path: "target"
           ref: ${{ github.head_ref }}
-      - name: Determine Ref
-        id: get_ref
-        shell: bash
-        if: ${{ github.repository != env.SOURCE_REPO }}
-        run: |
-          echo "ref=$SOURCE_REF" >> "$GITHUB_OUTPUT"
       - name: Checkout Source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
+        if: ${{ github.repository != env.SOURCE_REPO }}
         with:
           repository: ${{ env.SOURCE_REPO }}
-          ref: ${{ steps.get_ref.outputs.ref }}
           token: ${{ secrets.SYNC_PAT }}
-          path: 'source'
+          path: "source"
+      - name: Checkout Source
+        uses: actions/checkout@v7
+        if: ${{ github.repository == env.SOURCE_REPO }}
+        with:
+          token: ${{ secrets.SYNC_PAT }}
+          ref: ${{ github.head_ref }}
+          path: "source"
       - name: Print files and directories
         shell: bash
         run: tree -aI "\.git" "$(pwd)"
@@ -40,11 +43,13 @@ jobs:
         shell: bash
         run: |
           folder=".github"
-          rsync --recursive --exclude="workflows/_*.yml" --exclude="workflows/wf_*.yml" "source/${folder}/" "target/${folder}"
+          
+          rsync --recursive \
+            --exclude="workflows/_*.yml" \
+            --exclude="workflows/wf_*.yml" \
+            --exclude="copilot-instructions.md" \
+            "source/${folder}/" "target/${folder}"
 
-          rm -f "target/${folder}/workflows/_*.yml"
-          rm -f "target/${folder}/workflows/markdown-link-check.yml"
-          rm -rf "target/${folder}/markdown-link-check"
       - name: Create Job Summary
         shell: bash
         run: |
