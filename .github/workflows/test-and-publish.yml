@@ -13,6 +13,9 @@ on:
       - 'templates/**'
       - Chart.yaml
 
+permissions:
+  contents: read
+
 jobs:
   test:
     name: Test Chart Template
