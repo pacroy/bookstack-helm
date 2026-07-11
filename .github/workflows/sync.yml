@@ -42,13 +42,14 @@ jobs:
       - name: Sync files
         shell: bash
         run: |
-          folder=".github"
-          
-          rsync --recursive \
-            --exclude="workflows/_*.yml" \
-            --exclude="workflows/wf_*.yml" \
-            --exclude="copilot-instructions.md" \
-            "source/${folder}/" "target/${folder}"
+          cd source
+
+          rsync --archive --relative \
+            ".github/workflows/sync.yml" \
+            ".github/workflows/mdlink.yml" \
+            ".github/workflows/linter.yml" \
+            ".github/mdlink/" \
+            "../target/"
 
       - name: Create Job Summary
         shell: bash
