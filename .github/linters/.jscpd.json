@@ -1,11 +1,5 @@
 {
-    "threshold": 0,
-    "reporters": [
-        "consoleFull"
-    ],
     "ignore": [
-        "**/__snapshots__/**",
-        "**/templates/**"
-    ],
-    "absolute": true
+        ".github/workflows/_sync_secrets.yml"
+    ]
 }
