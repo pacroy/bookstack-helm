@@ -27,7 +27,7 @@ jobs:
         shell: bash
         run: |
           helm template test-release . \
-            --values values-test.yaml
+            --values values.yaml
       - name: Checkout Helm Repo
         uses: actions/checkout@v7
         with:
