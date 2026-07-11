@@ -1,17 +1,18 @@
-# checkov:skip=CKV_SECRET_6: Example values include placeholder secrets
-# appHost: www.yourwiki.com
-# appKey: base64:VGhpc0lzQW5FeGFtcGxlQXBwS2V5Q2hhbmdlVGhpcyE=
+appHost: www.yourwiki.com
+appKey: base64:VGhpc0lzQW5FeGFtcGxlQXBwS2V5Q2hhbmdlVGhpcyE=
 # allowHttp: false
-# azuread:
-#     enabled: true
-#     tenantId: 5a5e106e-7166-11ea-bc55-0242ac130003
-#     appId: 6667181a-7166-11ea-bc55-0242ac130003
-#     appSecret: thisIsSecret
-# smtp:
-#     enabled: true
-#     host: smtp.yourwiki.com
-#     port: "25"
-#     username: user
-#     password: thisIsPassword
-#     fromAddress: do_not_reply@yourwiki.com
-#     fromName: "My Wiki"
+azuread:
+    enabled: true
+    tenantId: 5a5e106e-7166-11ea-bc55-0242ac130003
+    appId: 6667181a-7166-11ea-bc55-0242ac130003
+    # checkov:skip=CKV_SECRET_6: Example values include placeholder secrets
+    appSecret: thisIsSecret
+smtp:
+    enabled: true
+    host: smtp.yourwiki.com
+    port: "25"
+    username: user
+    # checkov:skip=CKV_SECRET_6: Example values include placeholder secrets
+    password: thisIsPassword
+    fromAddress: do_not_reply@yourwiki.com
+    fromName: "My Wiki"
