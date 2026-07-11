@@ -132,7 +132,7 @@ The `bookstack.yaml` Deployment uses init containers for:
 - `appVersion` changes are independent—only update if BookStack version changes
 - SHA annotation in Chart.yaml is auto-populated by workflow (do not edit manually)
 
-### Required Values
+### Missing Required Values
 - `appKey` must be provided; chart will error if missing or blank (users see "An unknown error occurred")
 - `appHost` must be provided; used for Ingress and APP_URL environment variable
 - Both are marked as `required` in templates to fail fast
