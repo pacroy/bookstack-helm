@@ -29,14 +29,18 @@ helm repo index .
 ## High-Level Architecture
 
 ### Repository Structure
-- **Chart.yaml** - Helm chart metadata (name, version, appVersion, maintainers)
-- **values.yaml** - Default configuration values (commented examples)
-- **values-test.yaml** - Test values for validation
+- **Chart.yaml** - Helm chart metadata (name, version, appVersion, maintainers, annotations with SHA)
+- **values-test.yaml** - Test values used for template validation (no default values.yaml in repo)
+- **README.md** - Installation instructions with examples
 - **templates/** - Kubernetes resource manifests:
   - `bookstack.yaml` - BookStack Deployment with init containers, environment variables, persistent volume mounts
   - `mysql.yaml` - MySQL Deployment with persistent volume
   - `pvc.yaml` - PersistentVolumeClaim for uploads and storage
   - `ingress.yaml` - Nginx Ingress with cert-manager TLS integration
+- **.github/workflows/** - CI/CD automation:
+  - `test-and-publish.yml` - Tests chart template, packages, and publishes to pacroy/helm-repo
+  - `linter.yml` - Runs YAML, Markdown, and copy linters
+  - `mdlink.yml` - Validates Markdown links
 
 ### Deployment Architecture
 The chart deploys a complete stack:
@@ -107,10 +111,33 @@ The `bookstack.yaml` Deployment uses init containers for:
 3. Verify output contains expected resources and no errors
 
 ### Adding New Features
-- Add new fields to `values.yaml` (commented if optional)
+- Add new fields as examples in `values-test.yaml` for testing
 - Reference values in templates using `{{ .Values.fieldName }}`
-- Update version in `Chart.yaml`
+- Always increment chart `version` in `Chart.yaml` (uses semantic versioning)
+- Update `appVersion` only if BookStack application version changes
 - Ensure template renders correctly with `helm template` before PR
+- Any values referenced must be marked as `required` or have sensible defaults
 
 ### Pushing Chart to Repository
-Test/publish workflow automatically packages and publishes to `pacroy/helm-repo` on push to main. Manual trigger available via workflow_dispatch.
+1. Increment `version` in Chart.yaml (required by test-and-publish workflow)
+2. Create PR against main branch
+3. Workflow validates template and runs linters automatically
+4. On merge to main, workflow packages chart and publishes to pacroy/helm-repo
+5. Manual trigger available via workflow_dispatch for re-publishing
+
+## Common Pitfalls
+
+### Chart Version Management
+- **Must increment Chart version** for each release; workflow rejects duplicate versions
+- `appVersion` changes are independent—only update if BookStack version changes
+- SHA annotation in Chart.yaml is auto-populated by workflow (do not edit manually)
+
+### Required Values
+- `appKey` must be provided; chart will error if missing or blank (users see "An unknown error occurred")
+- `appHost` must be provided; used for Ingress and APP_URL environment variable
+- Both are marked as `required` in templates to fail fast
+
+### Image Tags
+- MySQL image is pinned to specific version (currently 8.4 LTS)
+- Busybox used for volume-init container—verify compatible with target Kubernetes versions
+- Always test image tag changes thoroughly; breaking changes in MySQL versions are common
