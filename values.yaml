@@ -1,3 +1,4 @@
+# checkov:skip=CKV_SECRET_6: Example values include placeholder secrets
 # appHost: www.yourwiki.com
 # appKey: base64:VGhpc0lzQW5FeGFtcGxlQXBwS2V5Q2hhbmdlVGhpcyE=
 # allowHttp: false
