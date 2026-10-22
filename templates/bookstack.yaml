@@ -89,7 +89,7 @@ spec:
           value: "tls"
           {{- end }}
           {{- end }}
-        image: solidnerd/bookstack:26.5
+        image: solidnerd/bookstack:26.9
         name: bookstack
         ports:
         - containerPort: 8080
